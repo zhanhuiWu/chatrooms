@@ -20,6 +20,7 @@ Chat.prototype.name = function(){
 Chat.prototype.sendMessage = function(room, text){
 	var message = {
 		room: room,
+		type: "text",
 		text: text
 	};
 	this.socket.emit('message', message);

@@ -43,7 +43,14 @@ $(document).ready(function(){
 	})
 	
 	socket.on('message', function(message){
-		var newElement = $('<div></div>').text(message.text);
+		var newElement = "";
+		if(message.type == "pic"){
+			newElement = $('<img />');
+			newElement.attr("src", message.text);
+			newElement = $('<div></div>').append(newElement);
+		}else{
+			newElement = $('<div></div>').text(message.text);
+		}
 		$('#message').append(newElement);
 	});
 	
@@ -85,17 +92,31 @@ $(document).ready(function(){
 			alert("This file is not a jpeg format pic.");
 		}else{
 			var file = this.files[0];
-			var data = {};
-			data.file = file;
-			data.fileName = fileName;
-			socket.emit("picture", data);
+			var fileReader = new FileReader();
+			fileReader.readAsDataURL(file);
+			fileReader.onload  = function(fileName){
+				var data = {};
+				data.text = this.result;
+				data.room = $('#room').text();
+				data.type = "pic";
+				//data.fileName = $("#send-picture")[0].value.split("\\");
+				//data.fileName = data.fileName[fileName.length - 1];
+				socket.emit("message", data);
+				var newElement = $('<img />');
+				newElement.attr("src", this.result);
+				$('#message').append(newElement);
+				$('#message').scrollTop($('#message').prop('scrollHeight'));
+			};
 		}
-		this.value = "";
 	});
 });
 
 function sendPic(){
 	$("#send-picture").click();
+}
+
+function uploadFile(file_base64, fileName){
+	
 }
 
 
