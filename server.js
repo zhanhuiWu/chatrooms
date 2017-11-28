@@ -13,12 +13,23 @@ var mime = require("mime");
 //cache是用来缓存文件内容的对象
 var cache = {};
 
+/**
+ * 返回404错误
+ * @param response
+ */
+
 function send404(response){
 	response.writeHead(404, {"Content-Type": "text/plain"});
 	response.write('Error 404: resource not found.');
 	response.end();
 }
 
+/**
+ * 返回路由指定的文件(*.js， *.html等)
+ * @param response 接收到的请求
+ * @param filePath 路由的地址
+ * @param fileContents 返回内容
+ */
 function sendFile(response, filePath, fileContents){
 	response.writeHead(
 		200,
@@ -27,6 +38,12 @@ function sendFile(response, filePath, fileContents){
 	response.end(fileContents);
 }
 
+/**
+ * 主要返回一些静态的文件
+ * @param response 请求
+ * @param cache 缓存
+ * @param absPath 基于根目录的绝对路径
+ */
 function serverStatic(response, cache, absPath){
 	if(cache[absPath]){
 		sendFile(response, absPath, cache[absPath]);
@@ -48,6 +65,9 @@ function serverStatic(response, cache, absPath){
 	}
 }
 
+/**
+ * 创建服务器并用于接收和处理请求
+ */
 var server = http.createServer(function(request, response){
 	var filePath = false;
 	if(request.url == "/"){
@@ -60,10 +80,15 @@ var server = http.createServer(function(request, response){
 	serverStatic(response, cache, absPath);
 });
 
+/**
+ * 设置服务器的监听端口
+ */
 server.listen(3000,  function(){
 	console.log("Server listening on port 3000");
 });
 
-//
+/**
+ * 将设置的服务器交给聊天服务进行监听
+ */
 var chatServer = require("./lib/chat_server");
 chatServer.listen(server);

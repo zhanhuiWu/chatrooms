@@ -17,7 +17,7 @@ function processUserInput(chatApp, socket){
 		}
 	}else {
 		chatApp.sendMessage($('#room').text(), message);
-		$('#message').append(divEscapedContentElement(message));
+		$('#message').append(divEscapedContentElement("[ME]" + chatApp.name + ": " + message));
 		$('#message').scrollTop($('#message').prop('scrollHeight'));
 	}
 	$('#send-message').val('');
@@ -30,6 +30,7 @@ $(document).ready(function(){
 		var message;
 		if(result.success){
 			message = 'You are now known as ' + result.name + '';
+			chatApp.name = result.name;
 		}else{
 			message = result.message;
 		}
