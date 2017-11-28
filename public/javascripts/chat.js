@@ -22,9 +22,9 @@ Chat.prototype.processCommand = function(command){
 	var command = words[0]
 						.substring(1, words[0].length)
 						.toLowerCase();
-	
+	console.log(command);
 	var message = false;
-	switch(commmand){
+	switch(command){
 		case 'join': 
 			words.shift();
 			var room = words.join(' ');
@@ -32,6 +32,7 @@ Chat.prototype.processCommand = function(command){
 			break;
 		case 'nick':
 			words.shift();
+			console.log("User is attempt to change the nick name");
 			var name = words.join(' ');
 			this.socket.emit('nameAttempt', name);
 			break;

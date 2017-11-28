@@ -7,11 +7,11 @@ function divSystemContentElement(message){
 }
 
 function processUserInput(chatApp, socket){
-	var message = ${'#send-message'}.val();
+	var message = $('#send-message').val();
 	var systemMessage;
 	
 	if(message.charAt(0) == '/'){
-		systemMessage  = charApp.processCommand(message);
+		systemMessage  = chatApp.processCommand(message);
 		if(systemMessage){
 			$('#messages').append(divSystemContentElement(sysremMessage));
 		}
@@ -25,7 +25,7 @@ function processUserInput(chatApp, socket){
 
 var socket = io.connect();
 $(document).ready(function(){
-	var charApp = new Chat(socket);
+	var chatApp = new Chat(socket);
 	socket.on('nameResult', function(result){
 		var message;
 		if(result.success){
@@ -46,7 +46,7 @@ $(document).ready(function(){
 		$('#message').append(newElement);
 	});
 	
-	socket.on('rooms', function(room){
+	socket.on('rooms', function(rooms){
 		$('#room-list').empty();
 		
 		for(var room in rooms){
