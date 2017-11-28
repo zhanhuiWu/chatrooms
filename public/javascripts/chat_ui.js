@@ -73,4 +73,29 @@ $(document).ready(function(){
 		processUserInput(chatApp, socket);
 		return false;
 	});
+	
+	$("#send-picture").change(function(){
+		var filePath = this.value;
+		var fileName = filePath.split("\\");
+		fileName = fileName[fileName.length - 1];
+		var ext = filePath.split(".");
+		ext = ext[ext.length - 1];
+		
+		if("*.jpg,*.jpge".indexOf(ext) == -1){
+			alert("This file is not a jpeg format pic.");
+		}else{
+			var file = this.files[0];
+			var data = {};
+			data.file = file;
+			data.fileName = fileName;
+			socket.emit("picture", data);
+		}
+		this.value = "";
+	});
 });
+
+function sendPic(){
+	$("#send-picture").click();
+}
+
+
