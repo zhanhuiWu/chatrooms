@@ -61,6 +61,19 @@ Chat.prototype.processCommand = function(command){
 			var name = words.join(' ');
 			this.socket.emit('nameAttempt', name);
 			break;
+		case 'to':
+			words.shift();
+			var data = {};
+			data.to = words.shift();
+			console.log(data.to);
+			data.text = words.join(' ');
+			console.log(data.text);
+			data.type = "text";
+			this.socket.emit('message', data);
+			break;
+		case 'myname':
+			$('#message').append(divSystemContentElement("Your nickname is: " + this.name));
+			break;
 		defualt:
 			message = 'Unrecognized command.';
 			break;

@@ -13,7 +13,7 @@ function processUserInput(chatApp, socket){
 	if(message.charAt(0) == '/'){
 		systemMessage  = chatApp.processCommand(message);
 		if(systemMessage){
-			$('#messages').append(divSystemContentElement(sysremMessage));
+			$('#message').append(divSystemContentElement(sysremMessage));
 		}
 	}else {
 		chatApp.sendMessage($('#room').text(), message);
@@ -34,7 +34,7 @@ $(document).ready(function(){
 		}else{
 			message = result.message;
 		}
-		$('#messages').append(divSystemContentElement(message));
+		$('#message').append(divSystemContentElement(message));
 	});
 	
 	socket.on("joinResult", function(result){
@@ -47,7 +47,7 @@ $(document).ready(function(){
 		if(message.type == "pic"){
 			newElement = $('<img />');
 			newElement.attr("src", message.text);
-			newElement = $('<div></div>').append(newElement);
+			newElement = $('<div></div>').append(message.name + ": ").append(newElement);
 		}else{
 			newElement = $('<div></div>').text(message.text);
 		}
@@ -99,12 +99,10 @@ $(document).ready(function(){
 				data.text = this.result;
 				data.room = $('#room').text();
 				data.type = "pic";
-				//data.fileName = $("#send-picture")[0].value.split("\\");
-				//data.fileName = data.fileName[fileName.length - 1];
 				socket.emit("message", data);
 				var newElement = $('<img />');
 				newElement.attr("src", this.result);
-				$('#message').append(newElement);
+				$('#message').append("[ME]" + chatApp.name + ": ").append(newElement);
 				$('#message').scrollTop($('#message').prop('scrollHeight'));
 			};
 		}
