@@ -35,23 +35,39 @@ $(document).ready(function(){
 			message = result.message;
 		}
 		$('#message').append(divSystemContentElement(message));
+		$('#message').scrollTop($('#message').prop('scrollHeight'));
 	});
 	
 	socket.on("joinResult", function(result){
 		$('#room').text(result.room);
 		$('#message').append(divSystemContentElement('Room changed.'));
-	})
+		$('#message').scrollTop($('#message').prop('scrollHeight'));
+	});
 	
 	socket.on('message', function(message){
 		var newElement = "";
 		if(message.type == "pic"){
-			newElement = $('<img />');
+			newElement = $('<img style="height:300px;width:400px;" />');
 			newElement.attr("src", message.text);
-			newElement = $('<div></div>').append(message.name + ": ").append(newElement);
+			newElement = $('<div></div>').append("[" + message.name + "]: ").append(newElement);
 		}else{
-			newElement = $('<div></div>').text(message.text);
+			newElement = $('<div></div>').text("[" + message.name + "]: " + message.text);
 		}
 		$('#message').append(newElement);
+		$('#message').scrollTop($('#message').prop('scrollHeight'));
+	});
+	
+	socket.on('privateMessage', function(message){
+		var newElement = "";
+		if(message.type == "pic"){
+			newElement = $('<img style="height:300px;width:400px;" />');
+			newElement.attr("src", message.text);
+			newElement = $('<div></div>').append("Private message from [" + message.name + "]: ").append(newElement);
+		}else{
+			newElement = $('<div></div>').text("[" + message.name + "]: " + message.text);
+		}
+		$('#message').append(newElement);
+		$('#message').scrollTop($('#message').prop('scrollHeight'));
 	});
 	
 	socket.on('rooms', function(rooms){
@@ -67,7 +83,7 @@ $(document).ready(function(){
 		$('#room-list div').click(function(){
 			chatApp.processCommand('/join ' + $(this).text());
 			$('#send-message').focus();
-		});		
+		});	
 	});
 	
 	setInterval(function(){
@@ -103,7 +119,7 @@ $(document).ready(function(){
 				var newElement = $('<img />');
 				newElement.attr("src", this.result);
 				$('#message').append("[ME]" + chatApp.name + ": ").append(newElement);
-				$('#message').scrollTop($('#message').prop('scrollHeight'));
+				$('#message').scrollBottom($('#message').prop('scrollHeight'));
 			};
 		}
 	});
